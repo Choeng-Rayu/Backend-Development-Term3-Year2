@@ -31,13 +31,14 @@ const server = http.createServer((req, res) => {
         req.on('data', chunk => {
             body += chunk.toString(); // Convert the chunk to a string
         });
+        // When all data is received
         req.on('end', ()=>{
             const parsedData = querystring.parse(body);
             const name = parsedData.name;
-            console.log('REceived name' , name);
+            console.log('Received name' , name);
 
             //write to file
-            fs.appendFile(' submissions.txt', name + '\n', (err)=>{
+            fs.appendFile('submissions.txt', name + '\n', (err)=>{
                 if(err){
                     console.error('Error writing to file', err);
                     res.writeHead(500, { 'Content-Type': 'text/plain' });
@@ -45,10 +46,8 @@ const server = http.createServer((req, res) => {
                 }
                 res.writeHead(200, { 'Content-Type': 'text/html' });
                 res.end(`<h1>Thank you ${name} for your submission</h1>`);
-            })
-
-
-        })
+            });
+        });
     }
     else {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
