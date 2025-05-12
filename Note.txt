@@ -1,0 +1,20 @@
+W3 DATE: 2023-09-18
+DAYS LEFT: 14
+WEEKS LEFT: 2
+MONTHS LEFT: 1
+YEAR LEFT: 2023
+1. what is URL_encoded format? this is the way to convert from link google that you type into another link that is you people can't understand.
+How It Works
+Each special character is replaced with a % followed by two hexadecimal digits representing the character's ASCII or UTF-8 code.
+For example:
+A space is encoded as %20.
+The character & is encoded as %26.
+A non-ASCII character like é is encoded as %C3%A9 (in UTF-8).
+
+
+2. what is express.js express is a wab framework for node.js that is unordered and is used to create web applications and APIs(unopinointed).
+
+why do we use express.js over http server?
+Express.js provides a more structured and organized way to build web applications and APIs. It offers a set of features and middleware that make it easier to handle routing, middleware, and other common tasks. Express.js also provides a more intuitive and expressive way to define routes and handle HTTP requests compared to raw HTTP 
+
+middleware is a function that is executed between the time when a request is received and the time when the response is sent. It is used to handle tasks such as authentication, logging, and data validation. Middleware functions are typically defined as functions that take three arguments: req (request), res (response), and next (a function to call to pass control to the next middleware function).
