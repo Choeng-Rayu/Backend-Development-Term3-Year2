@@ -18,3 +18,17 @@ why do we use express.js over http server?
 Express.js provides a more structured and organized way to build web applications and APIs. It offers a set of features and middleware that make it easier to handle routing, middleware, and other common tasks. Express.js also provides a more intuitive and expressive way to define routes and handle HTTP requests compared to raw HTTP 
 
 middleware is a function that is executed between the time when a request is received and the time when the response is sent. It is used to handle tasks such as authentication, logging, and data validation. Middleware functions are typically defined as functions that take three arguments: req (request), res (response), and next (a function to call to pass control to the next middleware function).
+
+KEY WORD: 
+post is user or client create data put into database 
+get is we get data from client
+delete is we delete data from database
+patch is we update data from database
+3. what is the difference between GET and POST methods?
+The main difference between GET and POST methods is the way they handle data.
+GET method is used to retrieve data from the server, and the data is appended to the URL as query parameters. This means that the data is visible in the URL and can be bookmarked or shared. GET requests are typically used for retrieving data from the server, such as fetching a list of users or a single user's profile.
+POST method is used to send data to the server, and the data is included in the request body. This means that the data is not visible in the URL and cannot be bookmarked or shared. POST requests are typically used for sending data to the server, such as creating a new user or updating a user's profile.
+4. what is the difference between PUT and PATCH methods?
+The main difference between PUT and PATCH methods is the way they handle partial updates.
+PUT method is used to completely replace the resource with the new data. This means that the entire resource is replaced with the new data, and any existing data is lost. PUT requests are typically used for updating the entire resource, such as updating a user's profile or deleting a user's account.
+PATCH method is used to update only the specified fields of the resource. This means that only the fields that are included in the request body are updated, and any existing fields that are not included in the request body are left unchanged. PATCH requests are typically used 
