@@ -1,30 +1,35 @@
 const express = require('express');
 const fs = require('fs');
-const querystring = require('querystring');
 const app = express();
+app.use(express.urlencoded({extended: true}));
 
-app.use((req)=>{
-    const url = req.url;
-    const method = req.method;
-    console.log(`Recieved ${method} request for ${url}`);
-       
-    
+function logger(req,res,next){
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    next();
+}
+app.use(logger);
+app.get('/', (req, res)=>{
+        // res.writeHead(200, {'Content-type': 'text/html'});
+        // res.end('Welcome to the Home Page');
+        res.send(`
+            <html>
+                <head><title>Home</title></head>
+                <body>
+                    <h1>Welcome to the Home Page</h1>
+                    <p>This is a simple Node.js server.</p>
+                </body>
+            </html>
+        `);
 });
 
-app.get('/', (res)=>{
-        res.writeHead(200, {'Content-type': 'text/html'});
-        res.end('Welcome to the Home Page');
-});
-
-app.get('/contact', (res)=>{
-    res.writeHead(200, {'Content-type': 'text/hmtl'});
-    res.end(`
-        <form method="post" action = "/contact">
-        <input type="text" name="name" placeholder="Youe name"/>
-        button type="submit">submit</button>
+app.get('/contact', (req, res)=>{
+    // res.writeHead(200, {'Content-type': 'text/hmtl'});
+    res.send(`
+        <form method="POST" action="/contact">
+            <input type="text" name="name" placeholder="Your name" />
+            <button type="submit">Submit</button>
         </form>
     `);
-    return res.end("Thank you for your submission");
         
 });
 app.post('/contact', (req, res)=>{
@@ -40,6 +45,6 @@ app.post('/contact', (req, res)=>{
     });
 
 });
-app.listen(3001, (req,res)=>{
-    console.log('Server is running at http://localhost:3001');
+app.listen(3000, (req,res)=>{
+    console.log('Server is running at http://localhost:3000');
 })
