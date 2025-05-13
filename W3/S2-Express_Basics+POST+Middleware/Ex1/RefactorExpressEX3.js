@@ -40,3 +40,6 @@ app.post('/contact', (req, res)=>{
     });
 
 });
+app.listen(3001, (req,res)=>{
+    console.log('Server is running at http://localhost:3001');
+})
