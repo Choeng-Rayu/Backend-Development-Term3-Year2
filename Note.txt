@@ -32,3 +32,6 @@ POST method is used to send data to the server, and the data is included in the 
 The main difference between PUT and PATCH methods is the way they handle partial updates.
 PUT method is used to completely replace the resource with the new data. This means that the entire resource is replaced with the new data, and any existing data is lost. PUT requests are typically used for updating the entire resource, such as updating a user's profile or deleting a user's account.
 PATCH method is used to update only the specified fields of the resource. This means that only the fields that are included in the request body are updated, and any existing fields that are not included in the request body are left unchanged. PATCH requests are typically used 
+
+W4:
+what is API? APi is the way to connect two different systems that are communicate together
