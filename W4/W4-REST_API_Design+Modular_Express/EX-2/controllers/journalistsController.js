@@ -1,17 +1,16 @@
-const data = require('../models/data.js');	
+import { journalists } from '../models/data.js';
+// ...existing code...
+    // import data from data.js	
 
 const getAllJournalists = (req, res)=>{
-    res.status(201).json(data.journalists);
+    res.status(201).json(_journalists);
 }
 
-const journalistsById = (req, res) =>{
-    const journalistId = parent(req.params.id);
-    const {name, email} = req.body;
-    const journalists = data.journalists.find(j => j.id === journalistId);
-    if(!email || !email){return res.status(400).json({error: 'journalists not found'})};
-    if(name) journalists.name = name;
-    if(email) journalist.email = email;
-    res.status(201).json(journalists)
+const getJournalistsById = (req, res) =>{
+    const journalistId = parseInt(req.params.id);
+    const journalists = _journalists.find(j => j.id === journalistId);
+    if(!journalists){return res.status(404).json({error: 'journalists not found'})};
+    res.status(201).json(journalists);
 }
 
 const createJournalist= (req, res)=>{
@@ -43,3 +42,10 @@ const deleteJournalist = (req, res) =>{
     res.status(204).send();
 }
 
+export {
+    getAllJournalists,
+    getJournalistsById,
+    createJournalist,
+    updateJournalist,
+    deleteJournalist
+}

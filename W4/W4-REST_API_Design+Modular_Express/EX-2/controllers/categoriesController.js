@@ -1,5 +1,4 @@
-const data = require('../models/data.js');
-const { categories } = data;    // import data from data.js
+import { categories } from '../models/data.js';
 
 const getAllCategories = (req, res) =>{
     res.json(categories);
@@ -35,14 +34,13 @@ const updateCategory = (req, res) =>{
 
 const deleteCategory = (req, res) =>{
     const categoryId = parseInt(req.params.id);
-    const {name} = req.body;
     const index = categories.findIndex(c =>c.id = categoryId);
     if(index === -1) return res.status(404).json({error: 'Categories not found'});
     categories.splice(index, 1);
     res.status(204).send();
 }
 
-module.exports+{
+export {
     getAllCategories,
     getCategoryById,
     createCategory,
