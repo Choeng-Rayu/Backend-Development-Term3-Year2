@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function UpdateArticleForm() {
   const [form, setForm] = useState({
@@ -7,24 +9,21 @@ export default function UpdateArticleForm() {
     journalistId: '',
     categoryId: '',
   });
+  const navigate = useNavigate();
 
 
   // Fetch to prefill a form and update an existing article
   useEffect(() => {
     const fetchArticle = async () => {
-      const articleId = window.location.pathname.split('/').pop(); // Get ID from URL
-      try {
-        const response = await axios.get(`http://localhost:5000/articles/${articleId}`);
+      try{
+        const response = await axios.get(`http://localhost:3000/articles/${useParams().id}`); 
         setForm(response.data);
       } catch (error) {
         console.error('Error fetching article:', error);
-        alert('Failed to load article. Please try again.');
       }
     };
-
     fetchArticle();
-
-  }, []);
+  }, [id]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -33,19 +32,11 @@ export default function UpdateArticleForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Update article with axios
-    try{
-      const response = await axios.put(`http://localhost:5000/articles/${form.id}`, form);
-      console.log('Article updated:', response.data);
-      // Reset form or redirect
-      setForm({
-        title: '',
-        content: '',
-        journalistId: '',
-        categoryId: '',
-      });
-    }catch(error){
+    try {
+      await axios.put('http://localhost:3000/api/articles/${id}', form);
+      navigate('/'); // Redirect to article list after successful update
+    } catch (error) {
       console.error('Error updating article:', error);
-      alert('Failed to update article. Please try again.');
     }
   };
 
