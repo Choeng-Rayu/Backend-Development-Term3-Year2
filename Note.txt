@@ -35,3 +35,9 @@ PATCH method is used to update only the specified fields of the resource. This m
 
 W4:
 what is API? APi is the way to connect two different systems that are communicate together
+
+
+
+W5:
+
+
