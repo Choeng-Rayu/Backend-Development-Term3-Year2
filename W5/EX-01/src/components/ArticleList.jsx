@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom';
 export default function ArticleList() {
   const [articles, setArticles] = useState([]);
   // Fetch all articles when component mounts
-  axios.get('http://localhost:5000/articles') 
+  axios.get('http://localhost:5000/articles/') 
     .then(res => setArticles(res.data)) 
     .catch(err => console.error(err));
   useEffect(() => {

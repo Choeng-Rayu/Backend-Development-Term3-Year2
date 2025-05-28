@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/categories/', categoriesRoutes);
 app.use('/articles/', ArticleRoutes);
 app.use('/journalists/', journalistRoutes);
-const PORT = 3000;
+const PORT = 5000;
 
 
 app.listen(PORT, () => {
