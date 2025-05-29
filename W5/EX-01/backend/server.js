@@ -43,6 +43,11 @@ const articles = [
     }
 ];
 
+app.use((req, res, next) => {
+    console.log(`${req.method} request for '${req.url}'`);
+    next();
+});
+
 app.get('/articles', (req, res) =>{
     res.json(articles);
 })
@@ -97,6 +102,38 @@ app.put('/articles/:id', (req, res)=>{
     articles[articleIndex] = updatedArticle;
     res.json(updatedArticle);
 })
+
+app.delete('/articles/:id', (req, res) =>{
+    const articleID = parseInt(req.params.id);
+    const articleIndex = articles.findIndex(a => a.id === articleID);
+    if(articleIndex === -1) {
+        return res.status(404).json({error: 'article not foundd'})
+    }
+    articles.splice(articleIndex, 1);
+    res.status(204).json({ message: 'Article deleted successfully' });
+})
+
+app.patch('/articles/:id', (req,res) =>{
+    const articleID = parseInt(req.params.id);
+    const { title, content, journalistId, categoryId } = req.body;
+    const articleIndex = articles.findIndex(a => a.id === articleID);
+    if(articleIndex === -1) {
+        return res.status(404).json({ error: 'Article not found'})
+    }
+    
+    const updatedArticle = { 
+        ...articles[articleIndex],
+        ...title ? { title } : {},
+        ...content ? { content } : {},
+        ...journalistId ? { journalistId } : {},
+        ...categoryId ? { categoryId } : {}
+    };
+
+    articles[articleIndex] = updatedArticle;
+    res.json(articles[articleIndex]);
+})
+
+
 
 const PORT = 5000;
 app.listen(PORT, ()=>{

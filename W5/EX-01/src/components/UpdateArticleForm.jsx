@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 export default function UpdateArticleForm() {
+  const { id } = useParams();
   const [form, setForm] = useState({
     title: '',
     content: '',
@@ -8,23 +11,18 @@ export default function UpdateArticleForm() {
     categoryId: '',
   });
 
-
-  // Fetch to prefill a form and update an existing article
   useEffect(() => {
     const fetchArticle = async () => {
-      const articleId = window.location.pathname.split('/').pop(); // Get ID from URL
       try {
-        const response = await axios.get(`http://localhost:5000/articles/${articleId}`);
+        const response = await axios.get(`http://localhost:5000/articles/${id}`);
         setForm(response.data);
       } catch (error) {
         console.error('Error fetching article:', error);
         alert('Failed to load article. Please try again.');
       }
     };
-
     fetchArticle();
-
-  }, []);
+  }, [id]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -32,18 +30,16 @@ export default function UpdateArticleForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Update article with axios
-    try{
-      const response = await axios.put(`http://localhost:5000/articles/${form.id}`, form);
-      console.log('Article updated:', response.data);
-      // Reset form or redirect
-      setForm({
-        title: '',
-        content: '',
-        journalistId: '',
-        categoryId: '',
+    try {
+      // Use PATCH for partial update, and convert IDs to numbers
+      const response = await axios.patch(`http://localhost:5000/articles/${id}`, {
+        ...form,
+        journalistId: Number(form.journalistId),
+        categoryId: Number(form.categoryId),
       });
-    }catch(error){
+      console.log('Article updated:', response.data);
+      alert('Article updated!');
+    } catch (error) {
       console.error('Error updating article:', error);
       alert('Failed to update article. Please try again.');
     }
