@@ -1,4 +1,6 @@
-import * as articleRepository from "../repositories/mockArticleRepository.js";
+// import * as articleRepository from "../repositories/mockArticleRepository.js";
+import * as articleRepository from "../repositories/sqlArticleRepository.js"; 
+
 
 // TODO : Change articleRepository to use the sqlArticleRepository
 
