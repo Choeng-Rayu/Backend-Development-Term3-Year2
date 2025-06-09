@@ -1,0 +1,206 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat");
+
+:root {
+  --main-color: #4b84c5;
+  --main-color-light: #67a8ea;
+  --grey-color: #bfbfbf;
+  font-family: "Montserrat", sans-serif;
+}
+
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/*  ----------  NAVIGATION BAR  --------------------- */
+
+nav {
+  background-color: var(--main-color);
+  padding: 10px 50px;
+
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.nav-item {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.2em;
+  padding: 8px 16px;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.nav-item:hover {
+  background-color: var(--main-color-light);
+  color: #fff;
+}
+
+.nav-item.active {
+  background-color: white;
+  color: var(--main-color);
+}
+
+/*  ----------  HEADER  --------------------- */
+
+header {
+  margin: 0 50px 0px;
+  text-align: center;
+}
+
+/*  ----------  HEADINGS  --------------------- */
+
+h1 {
+  padding: 30px 20px 20px;
+  font-size: 3em;
+  color: var(--main-color);
+}
+
+h2 {
+  padding: 10px;
+  font-size: 2em;
+  color: var(--main-color-light);
+}
+h3 {
+  padding: 10px;
+  font-size: 0.5em;
+  color: var(--grey-color);
+}
+
+/*  ----------   FORMS  --------------------- */
+form {
+  width: 50%;
+
+  margin: auto;
+  margin-top: 2em;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  padding: 30px;
+
+  border: 1px solid var(--grey-color);
+  border-radius: 20px;
+}
+
+input,
+textarea {
+  width: 100%;
+
+  padding: 20px;
+
+  font-family: inherit;
+  font-size: 1em;
+
+  border: 1px solid var(--grey-color);
+  border-radius: 15px;
+}
+
+button.main {
+  width: 100%;
+
+  margin-top: 30px;
+  padding: 20px;
+
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #fff;
+
+  outline: none;
+  border: none;
+  border-radius: 15px;
+  background: var(--main-color);
+}
+
+button:hover {
+  background: var(--main-color-light);
+}
+
+/*  ----------  CARDS  --------------------- */
+
+.article-list {
+  margin: 20px;
+  margin-top: 2em;
+  padding: 0 50px;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Always 4 columns */
+  gap: 16px;
+}
+
+.article-card {
+  flex: 1 0 calc(25% - 16px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: 20px;
+  border-radius: 15px;
+  border: 1px solid var(--grey-color);
+  background-color: #fdfdfd;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.article-title {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: var(--main-color);
+  margin-bottom: 10px;
+}
+
+.article-author {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.article-snippet {
+  flex-grow: 1;
+  font-size: 0.95em;
+  color: #444;
+  margin-bottom: 15px;
+}
+
+.article-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Secondary button style */
+.button-secondary {
+  padding: 10px 14px;
+  background-color: var(--main-color);
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.button-secondary:hover {
+  background-color: var(--main-color-light);
+}
+
+/* Tertiary button style */
+.button-tertiary {
+  padding: 10px 14px;
+  background-color: transparent;
+  color: var(--main-color);
+  border: 1px solid var(--main-color);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.button-tertiary:hover {
+  background-color: var(--main-color-light);
+  color: white;
+  border-color: var(--main-color-light);
+}
