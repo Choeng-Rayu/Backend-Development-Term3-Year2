@@ -47,7 +47,9 @@ export const getArticlesByCategoryId = async (categoryId) => {
   const response = await axios.get(`${API_BASE_URL}/categories/${categoryId}/articles`);
   return response.data;
 };
-
+// export const getCategoriesByName = async (categoryId) =>{
+//   const response = await axios.get(`${API_BASE_URL}/categories/${categoryId}/`)
+// }
 export const getArticlesWithJournalist = async () => {
   const response = await axios.get(`${API_BASE_URL}/articles-with-journalist`);
   return response.data;

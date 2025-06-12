@@ -27,10 +27,7 @@ function App() {
         <Route path="/" element={<Navigate to="/articles" />} />
         <Route path="/articles" element={<ArticleList />} />
         <Route path="/articles/add" element={<ArticleForm isEdit={false} />} />
-        <Route
-          path="/articles/:id/edit"
-          element={<ArticleForm isEdit={true} />}
-        />
+        <Route path="/articles/:id/edit" element={<ArticleForm isEdit={true} />} />
         <Route path="/articles/:id" element={<ArticlePage />} />
         <Route path="/journalists/:id/articles" element={<JournalistArticles />} />
       </Routes>

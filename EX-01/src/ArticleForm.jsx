@@ -5,33 +5,33 @@ import axios from 'axios';
 export default function ArticleForm() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [form, setForm] = useState({
-    title: '',
-    content: '',
-    journalistId: '',
-    categoryId: ''
+  const [formData, setFormData] = useState({
+    title: "",
+    content: "",
+    journalist_id: "",
+    category: "",
   });
 
   useEffect(() => {
     if (id) {
       axios.get(`http://localhost:5000/articles/${id}`)
-        .then(res => setForm(res.data))
+        .then(res => setFormData(res.data))
         .catch(err => console.error(err));
     }
   }, [id]);
 
   const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = e => {
     e.preventDefault();
     if (id) {
-      axios.put(`http://localhost:5000/articles/${id}`, form)
+      axios.put(`http://localhost:5000/articles/${id}`, formData)
         .then(() => navigate('/'))
         .catch(err => console.error(err));
     } else {
-      axios.post('http://localhost:5000/articles', form)
+      axios.post('http://localhost:5000/articles', formData)
         .then(() => navigate('/'))
         .catch(err => console.error(err));
     }
@@ -42,28 +42,28 @@ export default function ArticleForm() {
       <h2>{id ? 'Edit' : 'Add'} Article</h2>
       <input
         name="title"
-        value={form.title}
+        value={formData.title}
         onChange={handleChange}
         placeholder="Title"
         required
       /><br />
       <textarea
         name="content"
-        value={form.content}
+        value={formData.content}
         onChange={handleChange}
         placeholder="Content"
         required
       /><br />
       <input
-        name="journalistId"
-        value={form.journalistId}
+        name="journalist_id"
+        value={formData.journalist_id}
         onChange={handleChange}
         placeholder="Journalist ID"
         required
       /><br />
       <input
-        name="categoryId"
-        value={form.categoryId}
+        name="category"
+        value={formData.category}
         onChange={handleChange}
         placeholder="Category ID"
         required

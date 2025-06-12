@@ -32,7 +32,8 @@ export async function getArticleById(id) {
 export async function createArticle(article) {
     // TODO
     try{
-        const [rows] = await pool.query('INSERT INTO ARTICLES (title, content, journalist, category) values (?, ?, ?, ?);', [article.title, article.content, article.journalist, article.category]);
+        console.log(article);
+        const [rows] = await pool.query('INSERT INTO ARTICLES (title, content, journalist_id, category) values (?, ?, ?, ?);', [article.title, article.content, article.journalist_id, article.category]);
         return rows;
     }catch(err){
         console.error('Error creating articls: ', err);
