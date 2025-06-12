@@ -28,6 +28,31 @@ export const removeArticle = async (id) => {
   return response.data;
 };
 
+export const getArticleWithJournalistById = async (id) => {
+  const response = await axios.get(`${API_BASE_URL}/articles/${id}/full`);
+  return response.data;
+};
+
+export const getArticlesByJournalistId = async (journalistId) => {
+  const response = await axios.get(`${API_BASE_URL}/journalists/${journalistId}/articles`);
+  return response.data;
+};
+
+export const getCategories = async () => {
+  const response = await axios.get(`${API_BASE_URL}/categories`);
+  return response.data;
+};
+
+export const getArticlesByCategoryId = async (categoryId) => {
+  const response = await axios.get(`${API_BASE_URL}/categories/${categoryId}/articles`);
+  return response.data;
+};
+
+export const getArticlesWithJournalist = async () => {
+  const response = await axios.get(`${API_BASE_URL}/articles-with-journalist`);
+  return response.data;
+};
+
 
 // OLD VERSION - MOCK
 

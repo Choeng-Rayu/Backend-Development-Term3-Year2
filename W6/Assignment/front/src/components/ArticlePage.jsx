@@ -1,6 +1,6 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getArticleById } from "../services/api";
+import { getArticleWithJournalistById } from "../services/api";
 
 export default function ArticlePage() {
   const { id } = useParams();
@@ -11,14 +11,14 @@ export default function ArticlePage() {
 
   useEffect(() => {
     fetchArticle();
-  }, []);
-
+    // eslint-disable-next-line
+  }, [id]);
 
   const fetchArticle = async () => {
     try {
       setLoading(true);
-
-      const found = await getArticleById(id);
+      // Use the new API to get article with journalist name
+      const found = await getArticleWithJournalistById(id);
       if (found) {
         setArticle(found);
         setError("");
@@ -42,7 +42,13 @@ export default function ArticlePage() {
       <h2>{article.title}</h2>
       <p>{article.content}</p>
       <div>
-        <strong>Journalist:</strong> {article.journalist}
+        <strong>Journalist:</strong> {article.journalist_name ? (
+          <Link to={`/journalists/${article.journalist_id}/articles`}>
+            {article.journalist_name}
+          </Link>
+        ) : (
+          article.journalist
+        )}
       </div>
       <div>
         <strong>Category:</strong> {article.category}

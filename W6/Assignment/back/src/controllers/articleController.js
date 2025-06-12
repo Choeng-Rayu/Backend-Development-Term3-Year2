@@ -66,3 +66,50 @@ export async function deleteArticle(req, res) {
     res.status(500).json({ message: "Server error" });
   }
 }
+
+// GET /api/articles/:id (with journalist name)
+export async function getArticleWithJournalistById(req, res) {
+  try {
+    const article = await articleRepository.getArticleWithJournalistById(req.params.id);
+    if (!article) {
+      return res.status(404).json({ message: "Article not found" });
+    }
+    res.json(article);
+  } catch (error) {
+    console.error("Error fetching article with journalist:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+// GET /api/articles-with-journalist
+export async function getArticlesWithJournalist(req, res) {
+  try {
+    const articles = await articleRepository.getArticlesWithJournalist();
+    res.json(articles);
+  } catch (error) {
+    console.error("Error fetching articles with journalist:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+// GET /api/categories
+export async function getCategories(req, res) {
+  try {
+    const categories = await articleRepository.getCategories();
+    res.json(categories);
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+// GET /api/categories/:id/articles
+export async function getArticlesByCategoryId(req, res) {
+  try {
+    const articles = await articleRepository.getArticlesByCategoryId(req.params.id);
+    res.json(articles);
+  } catch (error) {
+    console.error("Error fetching articles by category:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}

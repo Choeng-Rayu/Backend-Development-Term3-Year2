@@ -1,9 +1,10 @@
 import express, { json } from "express";
 import cors from "cors";
 import articleRouter from "./routes/articleRoutes.js";
+import journalistRouter from "./routes/journalistRoutes.js";
+import { getArticlesWithJournalist, getCategories, getArticlesByCategoryId, getArticleWithJournalistById } from "./controllers/articleController.js";
 
 const app = express();
-
 
 // Enable CORS for all routes and origins
 app.use(cors());
@@ -12,6 +13,13 @@ app.use(cors());
 app.use(json());
 
 app.use("/api/articles", articleRouter);
+app.use("/api/journalists", journalistRouter);
+
+// Extra endpoints for joined data
+app.get("/api/articles-with-journalist", getArticlesWithJournalist);
+app.get("/api/articles/:id/full", getArticleWithJournalistById); // article + journalist name
+app.get("/api/categories", getCategories);
+app.get("/api/categories/:id/articles", getArticlesByCategoryId);
 
 const PORT = 4000;
 app.listen(PORT, () => {

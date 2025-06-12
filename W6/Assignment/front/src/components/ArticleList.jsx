@@ -1,26 +1,64 @@
+// ArticleList.jsx
+// This component displays a list of articles, allows filtering by category, and shows journalist/category names.
+// It fetches articles and categories from the backend and updates the list when filters change.
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getArticles, removeArticle } from "../services/api";
+import {
+  getArticlesWithJournalist,
+  getCategories,
+  getArticlesByCategoryId,
+  removeArticle,
+} from "../services/api";
 
 //
 // ArticleList component
 //
 export default function ArticleList() {
+  // State for articles, loading, error, categories, and selected categories
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   const navigate = useNavigate();
 
+  // Fetch categories on mount
+  // Ensure categories is always an array (fixes categories.map error)
   useEffect(() => {
-    fetchArticles(); // Fetch all articles when component mounts
+    fetchCategories();
   }, []);
 
+  // Fetch articles when selectedCategories changes
+  useEffect(() => {
+    fetchArticles();
+    // eslint-disable-next-line
+  }, [selectedCategories]);
+
+  // Fetches categories from the backend
+  const fetchCategories = async () => {
+    try {
+      const data = await getCategories();
+      setCategories(Array.isArray(data) ? data : []); // <-- Fix: always set as array
+    } catch (err) {
+      setCategories([]);
+    }
+  };
+
+  // Fetches articles, filtered by category if selected
   const fetchArticles = async () => {
     setIsLoading(true);
     setError("");
     try {
-      const data = await getArticles();
+      let data;
+      if (selectedCategories.length === 0) {
+        data = await getArticlesWithJournalist();
+      } else {
+        // Fetch articles for the first selected category (for simplicity, can be extended for multiple)
+        // For multiple, you would need a backend endpoint that supports multiple category IDs
+        data = await getArticlesByCategoryId(selectedCategories[0]);
+      }
       setArticles(data);
     } catch (err) {
       setError("Failed to load articles. Please try again.");
@@ -29,6 +67,7 @@ export default function ArticleList() {
     }
   };
 
+  // Deletes an article and refreshes the list
   const deleteArticle = async (id) => {
     setIsLoading(true);
     setError("");
@@ -42,15 +81,35 @@ export default function ArticleList() {
     }
   };
 
+  // Navigation handlers
   const handleView = (id) => navigate(`/articles/${id}`);
-
   const handleEdit = (id) => navigate(`/articles/${id}/edit`);
+
+  // Handles category filter change
+  const handleCategoryChange = (e) => {
+    const value = e.target.value;
+    setSelectedCategories(value ? [value] : []);
+  };
 
   return (
     <>
+      {/* Category filter dropdown */}
+      <div style={{ marginBottom: 16 }}>
+        <label>Filter by Category: </label>
+        <select
+          onChange={handleCategoryChange}
+          value={selectedCategories[0] || ""}
+        >
+          <option value="">All</option>
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
+      </div>
       {isLoading && <p>Loading...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
-      
       <div className="article-list">
         {articles.map((article) => (
           <ArticleCard
@@ -66,12 +125,17 @@ export default function ArticleList() {
   );
 }
 
+// ArticleCard displays a single article's info, including journalist and category names
 function ArticleCard({ article, onView, onEdit, onDelete }) {
   return (
     <div className="article-card">
       <div className="article-title">{article.title}</div>
-      <div className="article-author">By {article.journalist}</div>
-
+      <div className="article-author">
+        By {article.journalist_name || article.journalist}
+      </div>
+      <div className="article-category">
+        Category: {article.category_name || article.category}
+      </div>
       <div className="article-actions">
         <button className="button-tertiary" onClick={() => onEdit(article.id)}>
           Edit
