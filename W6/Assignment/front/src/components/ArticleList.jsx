@@ -153,7 +153,7 @@ function ArticleCard({ article, onView, onEdit, onDelete }) {
   return (
     <div className="article-card">
       <div className="article-title">{article.title}</div>
-      <div className="article-author"> By
+      <div className="article-author"> By 
         {article.journalist_name ? (
           <Link to={`/journalists/${article.journalist_id}/articles`}>
             {article.journalist_name}
