@@ -96,10 +96,13 @@ export async function getArticlesWithJournalist(req, res) {
 export async function getCategories(req, res) {
   try {
     const categories = await articleRepository.getCategories();
+    if (!categories) {
+      return res.status(404).json({ message: "No categories found" });
+    }
     res.json(categories);
   } catch (error) {
     console.error("Error fetching categories:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 }
 

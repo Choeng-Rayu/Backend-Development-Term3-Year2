@@ -75,7 +75,7 @@ export default function ArticlePage() {
         )}
       </div>
       <div>
-        <strong>Category:</strong> {article.category}
+        <strong>Category:</strong> {article.category_name}
       </div>
 
       {relatedArticles.length > 0 && (

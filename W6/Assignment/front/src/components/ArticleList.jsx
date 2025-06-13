@@ -40,8 +40,29 @@ export default function ArticleList() {
   const fetchCategories = async () => {
     try {
       const data = await getCategories();
-      setCategories(Array.isArray(data) ? data : []); // <-- Fix: always set as array
+      // Ensure we have valid category data with unique IDs
+      const validCategories = Array.isArray(data)
+        ? data.filter(
+            (cat) =>
+              cat && // ensure category exists
+              (cat.id || cat.id === 0) && // ensure it has an id (including 0)
+              cat.name // ensure it has a name
+          )
+        : [];
+
+      // Remove any duplicates by ID
+      const uniqueCategories = validCategories.reduce((acc, current) => {
+        const x = acc.find((item) => item.id === current.id);
+        if (!x) {
+          return acc.concat([current]);
+        } else {
+          return acc;
+        }
+      }, []);
+
+      setCategories(uniqueCategories);
     } catch (err) {
+      console.error("Error fetching categories:", err);
       setCategories([]);
     }
   };
@@ -100,9 +121,11 @@ export default function ArticleList() {
           onChange={handleCategoryChange}
           value={selectedCategories[0] || ""}
         >
-          <option value="">All</option>
+          <option key="all" value="">
+            All
+          </option>
           {categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
+            <option key={`cat-${cat.id}`} value={cat.id}>
               {cat.name}
             </option>
           ))}

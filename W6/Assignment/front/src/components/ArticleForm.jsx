@@ -5,14 +5,16 @@ import { getArticleById, createArticle, updateArticle } from "../services/api";
 export default function ArticleForm({ isEdit }) {
   const { id } = useParams();
   const navigate = useNavigate();
-
-  const [formData, setFormData] = useState({
+  
+  // Initialize with default empty values to prevent undefined
+  const initialFormData = {
     title: "",
     content: "",
-    journalist: "",
-    category: "",
-  });
+    journalist_id: "",
+    category_id: "", // Updated to match database schema
+  };
 
+  const [formData, setFormData] = useState(initialFormData);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -20,14 +22,19 @@ export default function ArticleForm({ isEdit }) {
     if (isEdit && id) {
       fetchArticle(id);
     }
-  }, []);
+  }, [isEdit, id]); // Add dependencies to useEffect
 
   const fetchArticle = async (id) => {
     setIsLoading(true);
     setError("");
     try {
       const article = await getArticleById(id);
-      setFormData(article);
+      // Ensure all form fields have at least an empty string
+      setFormData({
+        ...initialFormData,
+        ...article,
+        category_id: article.category_id || article.category || "", // Handle both old and new field names
+      });
     } catch (err) {
       setError("Failed to load article. Please try again.");
     } finally {
@@ -36,7 +43,11 @@ export default function ArticleForm({ isEdit }) {
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value || "" // Ensure the value is never undefined
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -45,14 +56,20 @@ export default function ArticleForm({ isEdit }) {
     setError("");
 
     try {
+      const dataToSubmit = {
+        ...formData,
+        category_id: formData.category_id || formData.category, // Handle both old and new field names
+      };
+      
       if (isEdit) {
-        await updateArticle(id, formData);
+        await updateArticle(id, dataToSubmit);
       } else {
-        await createArticle(formData);
+        await createArticle(dataToSubmit);
       }
       navigate("/articles");
     } catch (err) {
       setError("Failed to submit article.");
+      // Don't reset the form on error
     } finally {
       setIsLoading(false);
     }
@@ -67,7 +84,7 @@ export default function ArticleForm({ isEdit }) {
         <h2>{isEdit ? "Edit Article" : "Create Article"}</h2>
         <input
           name="title"
-          value={formData.title}
+          value={formData.title || ""}
           onChange={handleChange}
           placeholder="Title"
           required
@@ -75,30 +92,30 @@ export default function ArticleForm({ isEdit }) {
         <br />
         <textarea
           name="content"
-          value={formData.content}
+          value={formData.content || ""}
           onChange={handleChange}
           placeholder="Content"
           required
         />
         <br />
         <input
-          name="journalist"
-          value={formData.journalist}
+          name="journalist_id"
+          value={formData.journalist_id || ""}
           onChange={handleChange}
           placeholder="Journalist ID"
           required
         />
         <br />
         <input
-          name="category"
-          value={formData.category}
+          name="category_id"
+          value={formData.category_id || formData.category || ""}
           onChange={handleChange}
           placeholder="Category ID"
           required
         />
         <br />
         <button className="main" type="submit">
-          {isEdit ? "Edit " : "Create"}
+          {isEdit ? "Edit" : "Create"}
         </button>
       </form>
     </>
