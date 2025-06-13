@@ -3,7 +3,7 @@
 // It fetches articles and categories from the backend and updates the list when filters change.
 
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   getArticlesWithJournalist,
   getCategories,
@@ -153,8 +153,15 @@ function ArticleCard({ article, onView, onEdit, onDelete }) {
   return (
     <div className="article-card">
       <div className="article-title">{article.title}</div>
-      <div className="article-author">
-        By {article.journalist_name || article.journalist}
+      <div className="article-author"> By
+        {article.journalist_name ? (
+          <Link to={`/journalists/${article.journalist_id}/articles`}>
+            {article.journalist_name}
+          </Link>
+        ) : (
+          article.journalist
+        )}
+        {/* By {article.journalist_name || article.journalist} */}
       </div>
       <div className="article-category">
         Category: {article.category_name || article.category}
