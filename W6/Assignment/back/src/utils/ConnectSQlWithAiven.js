@@ -60,11 +60,11 @@ dotenv.config();
 const ca = fs.readFileSync(new URL('../../ca.pem', import.meta.url));
 
 const connection = await mysql.createConnection({
-  host: 'coffe-management-db1st-choengrayu307-607c.b.aivencloud.com',
-  port: 21011,
-  user: 'avnadmin',
-  password: 'AVNS_KiWXNwxtH4tpuvcCgbt',
-  database: 'defaultdb',
+  host: '',
+  port:  1,
+  user: '',
+  password: '',
+  database: '',
   ssl: {
     ca: ca
   }
@@ -84,11 +84,11 @@ await connection.end();
 export async function getConnection() {
   const ca = fs.readFileSync(new URL('../../ca.pem', import.meta.url));
   return mysql.createConnection({
-    host: 'coffe-management-db1st-choengrayu307-607c.b.aivencloud.com',
+    host: '',
     port: 21011,
-    user: 'avnadmin',
-    password: 'AVNS_KiWXNwxtH4tpuvcCgbt',
-    database: 'Week6DB',
+    user: '',
+    password: '',
+    database: '',
     ssl: { ca }
   });
 }
