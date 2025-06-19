@@ -3,14 +3,17 @@
 //  - Connect to the database (using the pool provided by the database.js)
 // -  Perfrom the SQL querries to implement the bellow API
 //
-import {pool} from "../utils/database.js";
+
+import { getConnection } from '../utils/ConnectSQlWithAiven.js';
 
 // Get all articles
 export async function getArticles() {
+    let connection;
     try {
-        const [rows] = await pool.query(`
+        connection = await getConnection();
+        const [rows] = await connection.execute(`
             SELECT a.*, c.name as category_name, j.name as journalist_name 
-            FROM ARTICLES a
+            FROM Articles a
             LEFT JOIN Category c ON a.category_id = c.category_id
             LEFT JOIN journalists j ON a.journalist_id = j.journalist_id
         `);
@@ -18,15 +21,19 @@ export async function getArticles() {
     } catch(err) {
         console.error('Error fetching articles:', err);
         throw err;
+    } finally {
+        if (connection) await connection.end();
     }
 }
 
 // Get one article by ID
 export async function getArticleById(id) {
+    let connection;
     try {
-        const [rows] = await pool.query(`
+        connection = await getConnection();
+        const [rows] = await connection.execute(`
             SELECT a.*, c.name as category_name, j.name as journalist_name
-            FROM ARTICLES a
+            FROM Articles a
             LEFT JOIN Category c ON a.category_id = c.category_id
             LEFT JOIN journalists j ON a.journalist_id = j.journalist_id
             WHERE a.id = ?
@@ -35,100 +42,89 @@ export async function getArticleById(id) {
     } catch(err) {
         console.error('Error fetching article by ID:', err);
         throw err;
+    } finally {
+        if (connection) await connection.end();
     }
 }
 
 // Create a new article
 export async function createArticle(article) {
+    let connection;
     try {
-        // Map category to category_id if needed
+        connection = await getConnection();
         const category_id = article.category_id || article.category;
-        console.log(`This is Category_id: ${category_id}\n`);
-        const [result] = await pool.query(
-            'INSERT INTO ARTICLES (title, content, journalist_id, category_id) VALUES (?, ?, ?, ?);',
+        const [result] = await connection.execute(
+            'INSERT INTO Articles (title, content, journalist_id, category_id) VALUES (?, ?, ?, ?);',
             [article.title, article.content, article.journalist_id, category_id]
         );
-        
-        // Fetch and return the newly created article with category and journalist names
-        const [newArticle] = await pool.query(`
+        const [newArticle] = await connection.execute(`
             SELECT a.*, c.name as category_name, j.name as journalist_name
-            FROM ARTICLES a
+            FROM Articles a
             LEFT JOIN Category c ON a.category_id = c.category_id
             LEFT JOIN journalists j ON a.journalist_id = j.journalist_id
             WHERE a.id = ?
         `, [result.insertId]);
-        
         return newArticle[0];
     } catch(err) {
         console.error('Error creating article:', err);
         throw err;
+    } finally {
+        if (connection) await connection.end();
     }
 }
 
 // Update an article by ID
 export async function updateArticle(id, updatedData) {
+    let connection;
     try {
-        // // Map category to category_id if needed
-        // if (updatedData.category && !updatedData.category_id) {
-        //     updatedData.category_id = updatedData.category;
-        //     delete updatedData.category;
-        // }
-
-        // // Create SET clause and values array
-        // const setClause = Object.keys(updatedData).map(key => `${key} = ?`).join(', ');
-        // const values = [...Object.values(updatedData), id];
-        // console.log(`value of set clause: ${values}`);
-        // console.log(`\nSetClause: ${setClause}\n`)
-        console.log(updatedData)
-        // Update the article
-        const {title, content, journalist_id, category_id, id} = updatedData;
-        const [result] = await pool.query(
-            `UPDATE ARTICLES SET title = ?, content = ?, journalist_id = ?, category_id = ? WHERE id = ?`,
+        connection = await getConnection();
+        const {title, content, journalist_id, category_id} = updatedData;
+        const [result] = await connection.execute(
+            `UPDATE Articles SET title = ?, content = ?, journalist_id = ?, category_id = ? WHERE id = ?`,
             [title, content, journalist_id, category_id, id]
         );
-        
-        // const [result] = await pool.query(
-        //     `UPDATE ARTICLES SET title = '' WHERE id = ?`,
-        //     values
-        // );
-
         if (result.affectedRows === 0) {
             return null;
         }
-
-        // Fetch and return the updated article with category and journalist names
-        const [rows] = await pool.query(`
+        const [rows] = await connection.execute(`
             SELECT a.*, c.name as category_name, j.name as journalist_name
-            FROM ARTICLES a
+            FROM Articles a
             LEFT JOIN Category c ON a.category_id = c.category_id
             LEFT JOIN journalists j ON a.journalist_id = j.journalist_id
             WHERE a.id = ?
         `, [id]);
-        
         return rows[0];
     } catch (err) {
         console.error('Error updating article:', err);
         throw err;
+    } finally {
+        if (connection) await connection.end();
     }
 }
 
 // Delete an article by ID
 export async function deleteArticle(id) {
+    let connection;
     try {
-        const [result] = await pool.query('DELETE FROM ARTICLES WHERE id = ?;', [id]);
+        connection = await getConnection();
+        const [result] = await connection.execute('DELETE FROM Articles WHERE id = ?;', [id]);
         return result.affectedRows > 0;
     } catch(err) {
         console.error('Error deleting article:', err);
         throw err;
+    } finally {
+        if (connection) await connection.end();
     }
 }
 
 // Get all articles with journalist name
 export async function getArticlesWithJournalist() {
+    let connection;
     try {
-        const [rows] = await pool.query(`
+        connection = await getConnection();
+        const [rows] = await connection.execute(`
             SELECT a.*, c.name as category_name, j.name as journalist_name
-            FROM ARTICLES a
+            FROM Articles a
             LEFT JOIN Category c ON a.category_id = c.category_id
             LEFT JOIN journalists j ON a.journalist_id = j.journalist_id
         `);
@@ -136,15 +132,19 @@ export async function getArticlesWithJournalist() {
     } catch (err) {
         console.error('Error fetching articles with journalist:', err);
         throw err;
+    } finally {
+        if (connection) await connection.end();
     }
 }
 
 // Get all articles by category ID (with category name)
 export async function getArticlesByCategoryId(categoryId) {
+    let connection;
     try {
-        const [rows] = await pool.query(`
+        connection = await getConnection();
+        const [rows] = await connection.execute(`
             SELECT a.*, c.name as category_name, j.name as journalist_name
-            FROM ARTICLES a
+            FROM Articles a
             JOIN Category c ON a.category_id = c.category_id
             LEFT JOIN journalists j ON a.journalist_id = j.journalist_id
             WHERE c.category_id = ?
@@ -153,26 +153,34 @@ export async function getArticlesByCategoryId(categoryId) {
     } catch (err) {
         console.error('Error fetching articles by category ID:', err);
         throw err;
+    } finally {
+        if (connection) await connection.end();
     }
 }
 
 // Get all categories
 export async function getCategories() {
+    let connection;
     try {
-        const [rows] = await pool.query('SELECT category_id as id, name FROM Category ORDER BY name');
+        connection = await getConnection();
+        const [rows] = await connection.execute('SELECT category_id as id, name FROM Category ORDER BY name');
         return rows;
     } catch (err) {
         console.error('Error fetching categories:', err);
         throw err; // Re-throw the error to be handled by the controller
+    } finally {
+        if (connection) await connection.end();
     }
 }
 
 // Get article by ID with journalist name
 export async function getArticleWithJournalistById(id) {
+    let connection;
     try {
-        const [rows] = await pool.query(`
+        connection = await getConnection();
+        const [rows] = await connection.execute(`
             SELECT a.*, c.name as category_name, j.name as journalist_name
-            FROM ARTICLES a
+            FROM Articles a
             LEFT JOIN Category c ON a.category_id = c.category_id
             LEFT JOIN journalists j ON a.journalist_id = j.journalist_id
             WHERE a.id = ?
@@ -181,15 +189,19 @@ export async function getArticleWithJournalistById(id) {
     } catch (err) {
         console.error('Error fetching article with journalist by ID:', err);
         throw err;
+    } finally {
+        if (connection) await connection.end();
     }
 }
 
 // Get all articles by a specific journalist ID
 export async function getArticlesByJournalistId(journalistId) {
+    let connection;
     try {
-        const [rows] = await pool.query(`
+        connection = await getConnection();
+        const [rows] = await connection.execute(`
             SELECT a.*, c.name as category_name, j.name as journalist_name
-            FROM ARTICLES a
+            FROM Articles a
             LEFT JOIN Category c ON a.category_id = c.category_id
             LEFT JOIN journalists j ON a.journalist_id = j.journalist_id
             WHERE a.journalist_id = ?
@@ -198,5 +210,7 @@ export async function getArticlesByJournalistId(journalistId) {
     } catch (err) {
         console.error('Error fetching articles by journalist ID:', err);
         throw err;
+    } finally {
+        if (connection) await connection.end();
     }
 }
