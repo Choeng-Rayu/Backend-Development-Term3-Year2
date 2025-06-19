@@ -1,5 +1,8 @@
 // import * as articleRepository from "../repositories/mockArticleRepository.js";
-import * as articleRepository from "../repositories/sqlArticleRepository.js";
+// import * as articleRepository from "../repositories/sqlArticleRepository.js";
+// using Aiven sql database(cloud)
+import * as articleRepository from "../repositories/AivenSQL.js";
+
 
 // TODO : Change articleRepository to use the sqlArticleRepository
 
