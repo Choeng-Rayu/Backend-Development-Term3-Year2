@@ -1,18 +1,23 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../db/database.js";
 
-const User = sequelize.define('User', {
-  username: DataTypes.STRING
-});
 
-const Profile = sequelize.define('Profile', {
-  bio: DataTypes.STRING
-});
+ const Author = sequelize.define('Author', {
+  name: DataTypes.STRING,
+  birthYear: DataTypes.INTEGER
+ });
 
-User.hasOne(Profile);
-Profile.belongsTo(User);
+ const Book = sequelize.define('Book', {
+  title: DataTypes.STRING,
+  publicationYear: DataTypes.INTEGER,
+  pages: DataTypes.INTEGER
 
-export { User, Profile };
+ });
+
+Author.hasMany(Book);
+Book.belongsTo(Author);
+
+export { Author, Book };
 
 
 
