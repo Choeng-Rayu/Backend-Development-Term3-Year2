@@ -1,15 +1,16 @@
 import sequelize from "./db/database.js"; 
-import "./models/user.js"; // 👈 this line is critical
+import { User, Profile } from "./models/user.js";
 
 try {
-  // TODO - Call sequelize.sync()
+
   const result = await sequelize.sync();
-  console.log(result);
+  // console.log(result);
 
- 
-  // TODO -  Print the result of the sync on console
+  const profile = await Profile.create({ bio: 'test' });
+  const user = await User.create({ username: 'joe' });
+  await user.setProfile(profile);
+  console.log("User and profile created and associated!");
 
- 
 } catch (error) {
   console.error("Unable to connect to the database:", error);
 }

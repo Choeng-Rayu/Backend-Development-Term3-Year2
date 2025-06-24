@@ -1,27 +1,21 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../db/database.js";
 
-
-// TODO - Create the model User  (attributes name and age)
-
-// try {
-//   await sequelize.authenticate();
-//   console.log("Success");
-
-// } catch (error) {
-//   console.error("Error", error);
-// }
-
-
-const Student = sequelize.define('Student', {
-  name: DataTypes.STRING,
-  age: DataTypes.INTEGER
+const User = sequelize.define('User', {
+  username: DataTypes.STRING
 });
 
-export default Student;
+const Profile = sequelize.define('Profile', {
+  bio: DataTypes.STRING
+});
+
+User.hasOne(Profile);
+Profile.belongsTo(User);
+
+export { User, Profile };
 
 
 
-// TODO - Export the model User
+
 
 
