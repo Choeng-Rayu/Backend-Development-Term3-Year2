@@ -1,73 +1,26 @@
-import sequelize from "./db/database.js"; 
-// import {Student, Class, AttendanceRecord} from "./models/user.js"; // 👈 this line is critical
-const express = require('express');
-import {AttendanceRecord, ClassInstance, Student} from '../src/Controller/actions.js'
+import express, { json } from 'express';
+import { sequelize, Student, Class } from './models/index.js';
+import attendanceRoutes from './route/Attendace.js';
+
 const app = express();
-app.use(express.json());
+app.use(json());
 
-try {
-  // TODO - Call sequelize.sync()
- 
-  // TODO -  Print the result of the sync on console
-  // await sequelize.sync();
-  // const student = await Student.findByPk(studentId);
-  // const classInstance = await Class.findByPk(classId);
-  // await AttendanceRecord.create({
-  //   date: new Date(date),
-  //   present: true,
-  //   StudentId: student.id,
-  //   ClassId: classInstance.id
-  // });
+// Mount routes
+app.use('/attendance', attendanceRoutes);
+const port = 3000;
+// Sync database and start server
+sequelize.sync({ force: true }).then(async () => {
+  // Create a student and include a class after tables are created
+  await Student.create({
+    name: 'Ronan The Best',
+    Classes: [
+      { name: 'Math' }
+    ]
+  }, { include: [Class] });
 
-
-  
-  // Mark attendance
-  app.post('/attendance', async (req, res) => {
-    const { studentId, date } = req.query;
-    const { classId, present } = req.body;
-    const attendance = await AttendanceRecord.create({
-      date: new Date(date),
-      present,
-      StudentId: studentId,
-      ClassId: classId
-    });
-    res.json(attendance);
+  app.listen(port, () => {
+    console.log(`Server running http://localhost:${port}`);
   });
-
-  // Get attendance for a student on a specific date
-  app.get('/attendance', async (req, res) => {
-    const { studentId, date } = req.query;
-    const attendance = await AttendanceRecord.findOne({
-      where: {
-        StudentId: studentId,
-        date: new Date(date)
-      }
-    });
-    res.json(attendance);
-  });
-
-  // List attendance for all students in a class
-  app.get('/classes/:id/attendance', async (req, res) => {
-    const classInstance = await Class.findByPk(req.params.id, {
-      include: [{
-        model: AttendanceRecord,
-        include: [Student]
-      }]
-    });
-    res.json(classInstance);
-  });
-
-  // Get attendance summary for a student
-  app.get('/students/:id/attendance', async (req, res) => {
-    const student = await Student.findByPk(req.params.id, {
-      include: [AttendanceRecord]
-    });
-    res.json(student);
-  });
-
-  app.listen(3000, () => console.log('Server running on port 3000'));
- 
-} catch (error) {
-  console.error("Unable to connect to the database:", error);
-}
-
+}).catch((error) => {
+  console.error('Unable to sync database:', error);
+});
