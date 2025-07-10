@@ -76,6 +76,7 @@ Swagger provides:
 
 **12. What tradeoffs come with using token expiration (e.g., 1 hour)?**
 
+
 **Benefits:**
 - **Reduced attack window**: Stolen tokens become useless quickly
 - **Automatic cleanup**: No manual token revocation needed
